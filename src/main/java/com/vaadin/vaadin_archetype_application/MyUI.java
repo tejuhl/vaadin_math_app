@@ -2,9 +2,15 @@ package com.vaadin.vaadin_archetype_application;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadin.annotations.DesignRoot;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.util.PropertysetItem;
 import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
@@ -14,9 +20,11 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.declarative.Design;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
@@ -27,44 +35,27 @@ import com.vaadin.ui.VerticalLayout;
  */
 @Theme("mytheme")
 public class MyUI extends UI {
+	
+	private String questions;
+	private String plusValue;
+	private String minusValue;
 
     @Override
     
     protected void init(VaadinRequest vaadinRequest) {
-    	final VerticalLayout mainLayout = new VerticalLayout();
-    	mainLayout.setSizeFull();
-    	setContent(mainLayout);
-        final FormLayout form = new FormLayout();
+    	
+    	setContent(new FormView());
         
-
-        final TextField numberOfQuestions = new TextField("Number of questions");
-        numberOfQuestions.setRequired(true);
-        numberOfQuestions.addValidator(new IntegerRangeValidator("Input should be an Integer between 1 - 50.",1,50));
-        
-        Label plusMinusLabel = new Label("Which type of calculations you want?");
-        final CheckBox plus = new CheckBox();
-        plus.setIcon(FontAwesome.PLUS);
-        final CheckBox minus = new CheckBox();
-        minus.setIcon(FontAwesome.MINUS);
-        
-
-        
-        Button submitButton = new Button("Submit");
-        submitButton.addClickListener( e -> {
-            
-        });
-        
-        form.addComponents(numberOfQuestions, plusMinusLabel, plus, minus, submitButton);
-        form.setMargin(true);
-        form.setSpacing(true);
-        form.setWidth("50%");
-        
-        
-        mainLayout.addComponent(form);
-        mainLayout.setComponentAlignment(form, Alignment.MIDDLE_CENTER);
         
        
     }
+  
+  
+
+	
+	   
+   }
+
     
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
