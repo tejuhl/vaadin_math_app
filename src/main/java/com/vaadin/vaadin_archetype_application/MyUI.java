@@ -4,9 +4,15 @@ import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -25,26 +31,41 @@ public class MyUI extends UI {
     @Override
     
     protected void init(VaadinRequest vaadinRequest) {
-        final VerticalLayout layout = new VerticalLayout();
+    	final VerticalLayout mainLayout = new VerticalLayout();
+    	mainLayout.setSizeFull();
+    	setContent(mainLayout);
+        final FormLayout form = new FormLayout();
         
-        final TextField name = new TextField();
-        name.setCaption("Type your name here:");
 
-        Button button = new Button("Click Me");
-        button.addClickListener( e -> {
-            layout.addComponent(new Label("Thanks " + name.getValue() 
-                    + ", it works!"));
+        final TextField numberOfQuestions = new TextField("Number of questions");
+        numberOfQuestions.setRequired(true);
+        numberOfQuestions.addValidator(new IntegerRangeValidator("Input should be an Integer between 1 - 50.",1,50));
+        
+        Label plusMinusLabel = new Label("Which type of calculations you want?");
+        final CheckBox plus = new CheckBox();
+        plus.setIcon(FontAwesome.PLUS);
+        final CheckBox minus = new CheckBox();
+        minus.setIcon(FontAwesome.MINUS);
+        
+
+        
+        Button submitButton = new Button("Submit");
+        submitButton.addClickListener( e -> {
+            
         });
         
-        layout.addComponents(name, button);
-        layout.setMargin(true);
-        layout.setSpacing(true);
-        layout.setStyleName("mainLayout");
+        form.addComponents(numberOfQuestions, plusMinusLabel, plus, minus, submitButton);
+        form.setMargin(true);
+        form.setSpacing(true);
+        form.setWidth("50%");
         
         
+        mainLayout.addComponent(form);
+        mainLayout.setComponentAlignment(form, Alignment.MIDDLE_CENTER);
         
-        setContent(layout);
+       
     }
+    
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
