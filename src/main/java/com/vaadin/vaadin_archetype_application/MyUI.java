@@ -30,6 +30,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Notification.Type;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
@@ -41,16 +42,21 @@ import com.vaadin.ui.VerticalLayout;
 @Theme("mytheme")
 public class MyUI extends UI {
 	
-	private String questions;
+	private int questions;
 	private String plusValue;
 	private String minusValue;
-    private String plusRange;
-    private String minusRange;
+    private int plusRangeLowestValue;
+    private int plusRangeLargestValue;
+    private int minusRangeLowestValue;
+    private int minusRangeLargestValue;
     private ArrayList<String> challengeList = new ArrayList<>();
+    private ArrayList<VerticalLayout> challengeLayouts = new ArrayList<>();
+    private ArrayList<HorizontalLayout> challengeLines = new ArrayList<>();
     private ArrayList<String> answerList = new ArrayList<>();
     private PropertysetItem answers = new PropertysetItem();
     private int points = 0;
     private Label pointLabel = new Label();
+    Panel panel = new Panel("Challenge Panel");
 
     private Random random = new Random();
     
@@ -69,8 +75,10 @@ public class MyUI extends UI {
 	        formData.addItemProperty("questions", new ObjectProperty<Integer>(1));
 	        formData.addItemProperty("plus", new ObjectProperty<Boolean>(false));
 	        formData.addItemProperty("minus", new ObjectProperty<Boolean>(false));
-            formData.addItemProperty("plusRange", new ObjectProperty<String>("0-50"));
-            formData.addItemProperty("minusRange", new ObjectProperty<String>("0-50"));
+            formData.addItemProperty("plusRangeLowest", new ObjectProperty<String>("0"));
+            formData.addItemProperty("plusRangeLargest", new ObjectProperty<String>("10"));
+            formData.addItemProperty("minusRangeLowest", new ObjectProperty<String>("0"));
+            formData.addItemProperty("minusRangeLargest", new ObjectProperty<String>("10"));
 	        
 
 	        final TextField numberOfQuestions = new TextField("Number of questions");
@@ -83,42 +91,63 @@ public class MyUI extends UI {
 	        final CheckBox plus = new CheckBox();
 	        plus.setIcon(FontAwesome.PLUS);
             Label plusRangeLabel = new Label("Range of numbers: ");
+            HorizontalLayout plusRangeLayout = new HorizontalLayout();
            
-            TextField plusRangeOfNumbers = new TextField();
+            TextField plusRangeLowest = new TextField();
+            TextField plusRangeLargest = new TextField();
 
-            plusRangeOfNumbers.setWidth("100px");
+            plusRangeLowest.setWidth("60px");
+            plusRangeLargest.setWidth("60px");
             plusLayout.setSpacing(true);
             plusLayout.setMargin(true);
 
-            plusLayout.addComponents(plus, plusRangeLabel, plusRangeOfNumbers);
+            plusRangeLayout.addComponents(plusRangeLowest, new Label("-"), plusRangeLargest);
+            plusRangeLayout.setSpacing(true);
+            plusRangeLayout.setMargin(true);
+
+            plusLayout.addComponents(plus, plusRangeLabel, plusRangeLayout);
 
             HorizontalLayout minusLayout = new HorizontalLayout();
 	        final CheckBox minus = new CheckBox();
 	        minus.setIcon(FontAwesome.MINUS);
             Label minusRangeLabel = new Label("Range of numbers: ");
-           
-            TextField minusRangeOfNumbers = new TextField();
 
-            minusRangeOfNumbers.setWidth("100px");
+            HorizontalLayout minusRangeLayout = new HorizontalLayout();
+
+            TextField minusRangeLowest = new TextField();
+            TextField minusRangeLargest = new TextField();
+
+            minusRangeLowest.setWidth("60px");
+            minusRangeLargest.setWidth("60px");
+           
+            minusRangeLayout.addComponents(minusRangeLowest, new Label("-"), minusRangeLargest);
+
+            minusRangeLayout.setSpacing(true);
+            minusRangeLayout.setMargin(true);
+
             minusLayout.setSpacing(true);
             minusLayout.setMargin(true);
-            minusLayout.addComponents(minus, minusRangeLabel, minusRangeOfNumbers);
+            minusLayout.addComponents(minus, minusRangeLabel, minusRangeLayout);
 	        
 	        
 	        FieldGroup binder = new FieldGroup(formData);
 	        binder.bind(numberOfQuestions, "questions");
 	        binder.bind(plus, "plus");
 	        binder.bind(minus, "minus");
-            binder.bind(plusRangeOfNumbers, "plusRange");
-            binder.bind(minusRangeOfNumbers, "minusRange");
+            binder.bind(plusRangeLowest, "plusRangeLowest");
+            binder.bind(plusRangeLargest, "plusRangeLargest");
+            binder.bind(minusRangeLowest, "minusRangeLowest");
+            binder.bind(minusRangeLargest, "minusRangeLargest");
 
 
             
-	        Panel panel = new Panel("Challenge Panel");
+	        
             panel.setWidthUndefined();
             VerticalLayout challengeLayout = new VerticalLayout();
             panel.setVisible(false);
             panel.setContent(challengeLayout);
+            panel.setWidth("500px");
+            
             
 
             
@@ -127,11 +156,14 @@ public class MyUI extends UI {
 	        submitButton.addClickListener( event -> {
 	        	try {
 	        		binder.commit();
-	        		questions = binder.getField("questions").getValue().toString();
-	        		plusValue = binder.getField("plus").getValue().toString();
+                    plusValue = binder.getField("plus").getValue().toString();
 	        		minusValue = binder.getField("minus").getValue().toString();
-	        		plusRange = binder.getField("plusRange").getValue().toString();
-                    minusRange = binder.getField("minusRange").getValue().toString();
+
+	        		questions = Integer.parseInt(binder.getField("questions").getValue().toString());
+	        		plusRangeLowestValue = Integer.parseInt(binder.getField("plusRangeLowest").getValue().toString());
+                    plusRangeLargestValue = Integer.parseInt(binder.getField("plusRangeLargest").getValue().toString());
+                    minusRangeLowestValue = Integer.parseInt(binder.getField("minusRangeLowest").getValue().toString());
+                    minusRangeLargestValue = Integer.parseInt(binder.getField("minusRangeLargest").getValue().toString());
 
                     
 	        		if (!Boolean.parseBoolean(plusValue) && !Boolean.parseBoolean(minusValue)) {
@@ -139,13 +171,14 @@ public class MyUI extends UI {
                     } else {
                         panel.setVisible(true);
                         generateChallenges(challengeLayout);
+                        generateOneChallengeLayouts();
                     }
 	        		
 	        		
 	        		
-				} catch (CommitException e) {
+				} catch (CommitException | NumberFormatException e) {
 					System.out.println(e);
-					Notification.show("Something went wrong");
+					Notification.show("Something went wrong! " + e.getMessage(), Type.WARNING_MESSAGE);
 				}
 	            
 	        });
@@ -161,18 +194,78 @@ public class MyUI extends UI {
 	        setContent(mainLayout);
         
     }
+
+    private void generateOneChallengeLayouts() {
+        for (int i = 0; i < questions; i++) {
+            VerticalLayout oneChallengeLayout = new VerticalLayout();
+            oneChallengeLayout.addComponent(challengeLines.get(i));
+            HorizontalLayout buttonsLayout = new HorizontalLayout();
+            Button previousButton = new Button("Previous");
+            Button nextButton = new Button("Next");
+            nextButton.setWidth("100px");
+            previousButton.setWidth("100px");
+
+            Button check = new Button("Check Answer");
+            
+
+            int page = i;
+        
+            if (i != 0) {
+                previousButton.addClickListener(event -> {
+                    panel.setContent(challengeLayouts.get(page - 1));
+                    panel.setCaption("Question " + (page));
+                });
+                buttonsLayout.addComponent(previousButton);
+                buttonsLayout.setComponentAlignment(previousButton, Alignment.BOTTOM_LEFT);
+            }
+            buttonsLayout.addComponent(check);
+            if (i != questions -1) {
+             
+                nextButton.addClickListener(event -> {
+                    panel.setContent(challengeLayouts.get(page + 1));
+                    panel.setCaption("Question " + (page + 2));
+                });
+                buttonsLayout.addComponent(nextButton);
+                buttonsLayout.setComponentAlignment(nextButton, Alignment.BOTTOM_RIGHT);
+            }
+
+            check.addClickListener(event -> {
+                checkAnswer(page);
+            });
+            
+            
+            
+
+            buttonsLayout.setComponentAlignment(check, Alignment.BOTTOM_CENTER);
+            buttonsLayout.setSpacing(true);
+            buttonsLayout.setMargin(true);
+
+            oneChallengeLayout.addComponent(buttonsLayout);
+            oneChallengeLayout.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
+            oneChallengeLayout.setSpacing(true);
+            oneChallengeLayout.setMargin(true);
+            challengeLayouts.add(oneChallengeLayout);
+            
+        }   
+        
+        panel.setContent(challengeLayouts.get(0));
+        panel.setCaption("Question 1");
+    }
   
+
+    private void checkAnswer(int page) {
+        
+    }
 
     private void generateChallenges(VerticalLayout challengeLayout) {
         ArrayList<Label> challengeLinesLabels = new ArrayList<Label>();
-        for (int i=0;i<Integer.parseInt(questions);i++) {
+        for (int i=0;i<questions;i++) {
             HorizontalLayout challengeLine = new HorizontalLayout();
             Label challengeLabel = new Label();
             String challenge = createChallenge(); 
             TextField answerBox = new TextField();
             Label answerCorrect = new Label();
-
-            answerCorrect.setVisible(false);
+            
             
             answerBox.setWidth("100px");
             challengeLabel.setCaption(challenge);
@@ -181,7 +274,7 @@ public class MyUI extends UI {
             challengeLayout.addComponent(challengeLine);
             answers.addItemProperty("answer" + i, answerBox);
             challengeLinesLabels.add(answerCorrect);
-
+            challengeLines.add(challengeLine);
             challengeList.add(challenge);
         }
         Button checkButton = new Button("Check Answers");
@@ -198,7 +291,7 @@ public class MyUI extends UI {
                 checkAnswers(challengeLinesLabels);
             } catch (Exception e) {
                 System.out.println(e);
-                Notification.show("Something went wrong");
+                Notification.show("Something went wrong!" + e.getMessage(), Type.WARNING_MESSAGE);
             }
         });
 
@@ -206,7 +299,7 @@ public class MyUI extends UI {
 
     private void checkAnswers(ArrayList<Label> challengeLinesLabels) {
         
-        for (int i = 0; i < Integer.parseInt(questions); i++) {
+        for (int i = 0; i < questions; i++) {
             
             String[] challengeParts = challengeList.get(i).split(" ");
             int rightAnswer = 0;
@@ -236,7 +329,7 @@ public class MyUI extends UI {
 
 
     private void saveAnswers() {
-        for (int i = 0; i < Integer.parseInt(questions); i++) {
+        for (int i = 0; i < questions; i++) {
             answerList.add(answers.getItemProperty("answer" + i).getValue().toString());
         }
     }
@@ -268,22 +361,19 @@ public class MyUI extends UI {
     }
 
     private Integer[] generateNumbers(String operator) {
-        String[] rangeValues;
         int firstNum;
         int secondNum;
         Integer[] numbers;
         switch (operator) {
             case "+":
-                rangeValues = plusRange.split("-");
-                firstNum = random.nextInt(Integer.parseInt(rangeValues[1]) - Integer.parseInt(rangeValues[0]) + 1) + Integer.parseInt(rangeValues[0]);
-                secondNum = random.nextInt(Integer.parseInt(rangeValues[1]) - Integer.parseInt(rangeValues[0]) + 1) + Integer.parseInt(rangeValues[0]);
+                firstNum = random.nextInt(plusRangeLargestValue - plusRangeLowestValue + 1) + plusRangeLowestValue;
+                secondNum = random.nextInt(plusRangeLargestValue - plusRangeLowestValue + 1) + plusRangeLowestValue;
                 numbers = new Integer[]{firstNum, secondNum};
                 return numbers;
                 
             case "-":
-                rangeValues = minusRange.split("-");
-                firstNum = random.nextInt(Integer.parseInt(rangeValues[1]) - Integer.parseInt(rangeValues[0]) + 1) + Integer.parseInt(rangeValues[0]);
-                secondNum = random.nextInt(Integer.parseInt(rangeValues[1]) - Integer.parseInt(rangeValues[0]) + 1) + Integer.parseInt(rangeValues[0]);
+                firstNum = random.nextInt(minusRangeLargestValue - minusRangeLowestValue + 1) + minusRangeLowestValue;
+                secondNum = random.nextInt(minusRangeLargestValue - minusRangeLowestValue + 1) + minusRangeLowestValue;
                 numbers = new Integer[]{firstNum, secondNum};
                 return numbers;
                 
