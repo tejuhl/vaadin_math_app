@@ -44,6 +44,8 @@ public class MyUI extends UI {
 	private String questions;
 	private String plusValue;
 	private String minusValue;
+    private String plusRange;
+    private String minusRange;
     private ArrayList<String> challengeList = new ArrayList<>();
     private ArrayList<String> answerList = new ArrayList<>();
     private PropertysetItem answers = new PropertysetItem();
@@ -60,13 +62,15 @@ public class MyUI extends UI {
     	
     	VerticalLayout mainLayout = new VerticalLayout();
 		   mainLayout.setSizeFull();
-		   mainLayout.addStyleName("mainLayout");
+		   mainLayout.addStyleName(".mainLayout");
            
 		    FormLayout form = new FormLayout();
 	        PropertysetItem formData = new PropertysetItem();
 	        formData.addItemProperty("questions", new ObjectProperty<Integer>(1));
 	        formData.addItemProperty("plus", new ObjectProperty<Boolean>(false));
 	        formData.addItemProperty("minus", new ObjectProperty<Boolean>(false));
+            formData.addItemProperty("plusRange", new ObjectProperty<String>("0-50"));
+            formData.addItemProperty("minusRange", new ObjectProperty<String>("0-50"));
 	        
 
 	        final TextField numberOfQuestions = new TextField("Number of questions");
@@ -74,16 +78,39 @@ public class MyUI extends UI {
 	        numberOfQuestions.addValidator(new IntegerRangeValidator("Input should be an Integer between 1 - 50.",1,50));
 	        
 	        Label plusMinusLabel = new Label("Which type of calculations you want?");
+            HorizontalLayout plusLayout = new HorizontalLayout();
+
 	        final CheckBox plus = new CheckBox();
 	        plus.setIcon(FontAwesome.PLUS);
+            Label plusRangeLabel = new Label("Range of numbers: ");
+           
+            TextField plusRangeOfNumbers = new TextField();
+
+            plusRangeOfNumbers.setWidth("100px");
+            plusLayout.setSpacing(true);
+            plusLayout.setMargin(true);
+
+            plusLayout.addComponents(plus, plusRangeLabel, plusRangeOfNumbers);
+
+            HorizontalLayout minusLayout = new HorizontalLayout();
 	        final CheckBox minus = new CheckBox();
 	        minus.setIcon(FontAwesome.MINUS);
+            Label minusRangeLabel = new Label("Range of numbers: ");
+           
+            TextField minusRangeOfNumbers = new TextField();
+
+            minusRangeOfNumbers.setWidth("100px");
+            minusLayout.setSpacing(true);
+            minusLayout.setMargin(true);
+            minusLayout.addComponents(minus, minusRangeLabel, minusRangeOfNumbers);
 	        
 	        
 	        FieldGroup binder = new FieldGroup(formData);
 	        binder.bind(numberOfQuestions, "questions");
 	        binder.bind(plus, "plus");
 	        binder.bind(minus, "minus");
+            binder.bind(plusRangeOfNumbers, "plusRange");
+            binder.bind(minusRangeOfNumbers, "minusRange");
 
 
             
@@ -103,12 +130,14 @@ public class MyUI extends UI {
 	        		questions = binder.getField("questions").getValue().toString();
 	        		plusValue = binder.getField("plus").getValue().toString();
 	        		minusValue = binder.getField("minus").getValue().toString();
-	        		
-                    panel.setVisible(true);
+	        		plusRange = binder.getField("plusRange").getValue().toString();
+                    minusRange = binder.getField("minusRange").getValue().toString();
+
                     
 	        		if (!Boolean.parseBoolean(plusValue) && !Boolean.parseBoolean(minusValue)) {
                         Notification.show("At least one of checkboxes must be selected.");
                     } else {
+                        panel.setVisible(true);
                         generateChallenges(challengeLayout);
                     }
 	        		
@@ -121,7 +150,7 @@ public class MyUI extends UI {
 	            
 	        });
 	        
-	        form.addComponents(numberOfQuestions, plusMinusLabel, plus, minus, submitButton);
+	        form.addComponents(numberOfQuestions, plusMinusLabel, plusLayout, minusLayout, submitButton);
 	        form.setMargin(true);
 	        form.setSpacing(true);
 	        form.setWidthUndefined();
@@ -161,6 +190,8 @@ public class MyUI extends UI {
         challengeLayout.addComponent(checkButton);
         challengeLayout.setComponentAlignment(checkButton, Alignment.BOTTOM_RIGHT);
 
+        challengeLayout.setMargin(true);
+
         checkButton.addClickListener(event -> {
             try {
                 saveAnswers();
@@ -174,10 +205,12 @@ public class MyUI extends UI {
     }
 
     private void checkAnswers(ArrayList<Label> challengeLinesLabels) {
-        for (int i = 0; i < questions.length(); i++) {
+        
+        for (int i = 0; i < Integer.parseInt(questions); i++) {
             
             String[] challengeParts = challengeList.get(i).split(" ");
             int rightAnswer = 0;
+            
             switch (challengeParts[1]) {
                 case "+":
                     rightAnswer = Integer.parseInt(challengeParts[0]) + Integer.parseInt(challengeParts[2]);
@@ -186,7 +219,7 @@ public class MyUI extends UI {
                     rightAnswer = Integer.parseInt(challengeParts[0]) - Integer.parseInt(challengeParts[2]);
                     break;     
             }
-            
+            challengeLinesLabels.get(i).setVisible(true);
             if (answerList.get(i).equals(Integer.toString(rightAnswer))) {
                 
                 challengeLinesLabels.get(i).setIcon(FontAwesome.CHECK);
@@ -195,7 +228,7 @@ public class MyUI extends UI {
                 challengeLinesLabels.get(i).setIcon(FontAwesome.AMBULANCE);
                 challengeLinesLabels.get(i).setCaption("RightAnswer: " + Integer.toString(rightAnswer));
             }
-            challengeLinesLabels.get(i).setVisible(true);
+            
         }
         pointLabel.setVisible(true);
         pointLabel.setCaption(Integer.toString(points) + " / " + questions);
@@ -203,7 +236,7 @@ public class MyUI extends UI {
 
 
     private void saveAnswers() {
-        for (int i = 0; i < questions.length(); i++) {
+        for (int i = 0; i < Integer.parseInt(questions); i++) {
             answerList.add(answers.getItemProperty("answer" + i).getValue().toString());
         }
     }
@@ -211,22 +244,52 @@ public class MyUI extends UI {
 
     private String createChallenge() {
         
-        int upperbound = 50;
         
-        int firstNum = random.nextInt(upperbound);
-        int secondNum = random.nextInt(upperbound);
+        
+        
         String[] options = {"+", "-"};
         String operator;
+        Integer[] numbers;
         if (Boolean.parseBoolean(plusValue) && Boolean.parseBoolean(minusValue)) {
             operator = options[random.nextInt(options.length)];
-            return firstNum + " " + operator + " " + secondNum;
+            numbers = generateNumbers(operator);
+            return numbers[0] + " " + operator + " " + numbers[1];
         } else if (Boolean.parseBoolean(minusValue)) {
-            return firstNum + " - " + secondNum;
+            operator = "-";
+            numbers = generateNumbers(operator);
+            return numbers[0] + " - " + numbers[1];
         } else if (Boolean.parseBoolean(plusValue)) {
-            return firstNum + " + " + secondNum;
+            operator = "+";
+            numbers = generateNumbers(operator);
+            return numbers[0] + " + " + numbers[1];
         }
         return "";
 
+    }
+
+    private Integer[] generateNumbers(String operator) {
+        String[] rangeValues;
+        int firstNum;
+        int secondNum;
+        Integer[] numbers;
+        switch (operator) {
+            case "+":
+                rangeValues = plusRange.split("-");
+                firstNum = random.nextInt(Integer.parseInt(rangeValues[1]) - Integer.parseInt(rangeValues[0]) + 1) + Integer.parseInt(rangeValues[0]);
+                secondNum = random.nextInt(Integer.parseInt(rangeValues[1]) - Integer.parseInt(rangeValues[0]) + 1) + Integer.parseInt(rangeValues[0]);
+                numbers = new Integer[]{firstNum, secondNum};
+                return numbers;
+                
+            case "-":
+                rangeValues = minusRange.split("-");
+                firstNum = random.nextInt(Integer.parseInt(rangeValues[1]) - Integer.parseInt(rangeValues[0]) + 1) + Integer.parseInt(rangeValues[0]);
+                secondNum = random.nextInt(Integer.parseInt(rangeValues[1]) - Integer.parseInt(rangeValues[0]) + 1) + Integer.parseInt(rangeValues[0]);
+                numbers = new Integer[]{firstNum, secondNum};
+                return numbers;
+                
+        }
+        numbers = new Integer[]{0,0};
+        return numbers;
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
