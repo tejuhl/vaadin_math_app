@@ -34,6 +34,8 @@
 @mixin mytheme {
   @include valo;
 	
-	
+	.mainLayout {
+    background-color: "#000";
+  }
 
 }
