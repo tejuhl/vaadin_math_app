@@ -13237,6 +13237,46 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: hidden;
 }
 
-.mytheme .mainLayout {
-	background-color: "#000";
+.mytheme .form {
+	background-color: #E1E1E1;
+	border: 2px solid #000;
+	border-radius: 20px;
+	align-items: center;
+	justify-content: center;
+}
+
+.mytheme .plusLayout {
+	display: flex;
+	align-items: center;
+}
+
+.mytheme .plusIcon {
+	color: blue;
+}
+
+.mytheme .minusLayout {
+	display: flex;
+	align-items: center;
+}
+
+.mytheme .minusIcon {
+	color: blue;
+}
+
+.mytheme .submitButton {
+	background: blue;
+	transition: 0.5s;
+	width: 100px;
+	border: 2px solid #000;
+	border-radius: 20px;
+	color: white;
+}
+
+.mytheme .submitButton:hover {
+	width: 150px;
+}
+
+.mytheme .v-panel-caption {
+	background: #9A00B2;
+	color: white;
 }

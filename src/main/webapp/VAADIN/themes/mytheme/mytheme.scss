@@ -34,8 +34,47 @@
 @mixin mytheme {
   @include valo;
 	
-	.mainLayout {
-    background-color: "red";
+	.form {
+    background-color: #E1E1E1;
+	border: 2px solid #000;
+	border-radius: 20px;
+	
+	align-items: center;
+	justify-content: center;
   }
+	.plusLayout {
+		display: flex;
+		align-items: center;
+	}
+	.plusIcon {
+		color: blue;
+	}
+	.minusLayout {
+		display: flex;
+		align-items: center;
+	}
+	.minusIcon {
+		color: blue;
+	}
+	.submitButton {
+		background: blue;
+		transition: 0.5s;
+		width: 100px;
+		border: 2px solid #000;
+		border-radius: 20px;
+		color: white;
+	}
+	.submitButton:hover {
+		transform: scale(1.2) perspective(1px);
+		
+	}
+	
+	.v-panel-caption {
+		background: #9A00B2;
+		color: white;
+		
+	}
+
+	
 
 }
