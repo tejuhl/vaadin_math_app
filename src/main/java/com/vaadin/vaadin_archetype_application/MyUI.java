@@ -60,7 +60,7 @@ public class MyUI extends UI {
     private VerticalLayout challengeLayout = new VerticalLayout();
     private FormLayout form = new FormLayout();
     private FontAwesome correctIcon = FontAwesome.CHECK;
-    private FontAwesome wrongIcon = FontAwesome.BAN;
+    private FontAwesome wrongIcon = FontAwesome.CLOSE;
 
     private Random random = new Random();
     
@@ -342,7 +342,7 @@ public class MyUI extends UI {
             answerLine.addStyleName("questionsLayout");
             
             answerBox.setWidth("60px");
-            answerLine.addComponents(challengeLabel, answerBox);
+            answerLine.addComponents(new BallTest(2), new Label("+"), new BallTest(6), answerBox);
             challengeLine.addComponents(answerLine, answerCorrect);
             challengeLine.setSpacing(true);
             challengeLine.setStyleName("challengeLine");
