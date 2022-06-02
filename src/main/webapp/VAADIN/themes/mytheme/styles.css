@@ -13315,6 +13315,7 @@ div.v-layout.v-horizontal.v-widget {
 .mytheme .challengeLine {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 }
 
 .mytheme .previousButton {
@@ -13353,4 +13354,15 @@ div.v-layout.v-horizontal.v-widget {
 	border-radius: 50%;
 	margin: 1px;
 	background: red;
+}
+
+.mytheme .numLayout {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+}
+
+.mytheme .numLayout .v-captiontext {
+	font-size: 50px;
 }

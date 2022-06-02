@@ -205,6 +205,9 @@ public class MyUI extends UI {
 	        
 	        mainLayout.addComponent(form);    
             mainLayout.addComponent(panel);
+            BallTest ballTest = new BallTest(1);
+            mainLayout.addComponent(ballTest);
+            mainLayout.setComponentAlignment(ballTest, Alignment.TOP_CENTER);
             mainLayout.setComponentAlignment(form, Alignment.MIDDLE_CENTER);
             mainLayout.setComponentAlignment(panel, Alignment.MIDDLE_CENTER);
 	        
@@ -330,7 +333,7 @@ public class MyUI extends UI {
         for (int i=0;i<questions;i++) {
             HorizontalLayout challengeLine = new HorizontalLayout();
             HorizontalLayout answerLine = new HorizontalLayout();
-            String challenge = createChallenge(); 
+            String challenge = createChallenge();
             Label challengeLabel = new Label(challenge);
             TextField answerBox = new TextField();
             Label answerCorrect = new Label();     
