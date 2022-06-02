@@ -51,14 +51,16 @@ public class MyUI extends UI {
     private ArrayList<VerticalLayout> challengeLayouts = new ArrayList<>();
     private ArrayList<HorizontalLayout> challengeLines = new ArrayList<>();
     private ArrayList<String> answerList = new ArrayList<>();
-    ArrayList<Label> challengeLinesLabels = new ArrayList<Label>();
+    private ArrayList<Label> challengeLinesLabels = new ArrayList<Label>();
     private PropertysetItem answers = new PropertysetItem();
     private int points = 0;
     private Label pointLabel = new Label();
-    Panel panel = new Panel("Challenge Panel");
+    private Panel panel = new Panel("Challenge Panel");
     private int questionsAnswered = 0;
-    VerticalLayout challengeLayout = new VerticalLayout();
-    FormLayout form = new FormLayout();
+    private VerticalLayout challengeLayout = new VerticalLayout();
+    private FormLayout form = new FormLayout();
+    private FontAwesome correctIcon = FontAwesome.CHECK;
+    private FontAwesome wrongIcon = FontAwesome.BAN;
 
     private Random random = new Random();
     
@@ -302,10 +304,7 @@ public class MyUI extends UI {
                 case "-":
                     rightAnswer = Integer.parseInt(challengeParts[0]) - Integer.parseInt(challengeParts[2]);
                     break;     
-            }
-            FontAwesome correctIcon = FontAwesome.CHECK;
-            FontAwesome wrongIcon = FontAwesome.BAN;
-      
+            }   
             
             challengeLinesLabels.get(page).setVisible(true);
             if (answer == rightAnswer) {
@@ -330,19 +329,22 @@ public class MyUI extends UI {
         answers = new PropertysetItem();
         for (int i=0;i<questions;i++) {
             HorizontalLayout challengeLine = new HorizontalLayout();
-            Label challengeLabel = new Label();
+            HorizontalLayout answerLine = new HorizontalLayout();
             String challenge = createChallenge(); 
+            Label challengeLabel = new Label(challenge);
             TextField answerBox = new TextField();
             Label answerCorrect = new Label();     
             
+            answerLine.setSpacing(true);
+            answerLine.addStyleName("questionsLayout");
             
-            answerBox.setWidth("100px");
-            challengeLabel.setCaption(challenge);
-            
-            challengeLine.addComponents(challengeLabel, answerBox, answerCorrect);
+            answerBox.setWidth("60px");
+            answerLine.addComponents(challengeLabel, answerBox);
+            challengeLine.addComponents(answerLine, answerCorrect);
             challengeLine.setSpacing(true);
-        
-            
+            challengeLine.setStyleName("challengeLine");
+            answerCorrect.setStyleName("answerCorrect");
+
             answers.addItemProperty("answer" + i, answerBox);
             challengeLinesLabels.add(answerCorrect);
             challengeLines.add(challengeLine);
@@ -371,8 +373,13 @@ public class MyUI extends UI {
         Button checkButton = new Button("Check Answers");
         Button newGameButton = new Button("New Game");
         HorizontalLayout resultLayoutButtons = new HorizontalLayout();
+        HorizontalLayout pointTextLayout = new HorizontalLayout();
+        
+        pointTextLayout.addComponent(pointLabel);
+        pointTextLayout.addStyleName("pointTextLayout");
+        
         resultLayoutButtons.addComponents(newGameButton, checkButton);
-        challengeLayout.addComponent(pointLabel);
+        challengeLayout.addComponent(pointTextLayout);
         challengeLayout.addComponent(resultLayoutButtons);
         resultLayoutButtons.setWidth("100%");
         resultLayoutButtons.setComponentAlignment(checkButton, Alignment.MIDDLE_RIGHT);

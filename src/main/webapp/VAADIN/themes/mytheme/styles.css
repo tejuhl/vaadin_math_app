@@ -13312,6 +13312,11 @@ div.v-layout.v-horizontal.v-widget {
 	flex-direction: column;
 }
 
+.mytheme .challengeLine {
+	display: flex;
+	align-items: center;
+}
+
 .mytheme .previousButton {
 	border-color: red;
 	background: red;
@@ -13325,4 +13330,27 @@ div.v-layout.v-horizontal.v-widget {
 .mytheme .nextButton {
 	border-color: lightseagreen;
 	background: lightseagreen;
+}
+
+.mytheme .pointTextLayout {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.mytheme .pointTextLayout .v-captiontext {
+	font-size: 50px;
+}
+
+.mytheme .answerCorrect {
+	display: flex;
+	align-items: center;
+}
+
+.mytheme .ball {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	margin: 1px;
+	background: red;
 }
