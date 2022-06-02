@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.servlet.annotation.WebServlet;
+import javax.swing.Icon;
+
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -12,6 +14,7 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Alignment;
@@ -76,14 +79,21 @@ public class MyUI extends UI {
 	        formData.addItemProperty("questions", new ObjectProperty<Integer>(1));
 	        formData.addItemProperty("plus", new ObjectProperty<Boolean>(false));
 	        formData.addItemProperty("minus", new ObjectProperty<Boolean>(false));
-            formData.addItemProperty("plusRangeLowest", new ObjectProperty<String>("0"));
+            formData.addItemProperty("plusRangeLowest", new ObjectProperty<String>("1"));
             formData.addItemProperty("plusRangeLargest", new ObjectProperty<String>("10"));
-            formData.addItemProperty("minusRangeLowest", new ObjectProperty<String>("0"));
+            formData.addItemProperty("minusRangeLowest", new ObjectProperty<String>("1"));
             formData.addItemProperty("minusRangeLargest", new ObjectProperty<String>("10"));
-	        
-	        final TextField numberOfQuestions = new TextField("Questions");
+
+
+	        HorizontalLayout questionsLayout = new HorizontalLayout();
+            Label questionsLabel = new Label("Number of questions");
+	        final TextField numberOfQuestions = new TextField();
 	        numberOfQuestions.setRequired(true);
 	        numberOfQuestions.addValidator(new IntegerRangeValidator("Input should be an Integer between 1 - 10.",1,10));
+            numberOfQuestions.setWidth("60px");
+            questionsLayout.addComponents(questionsLabel, numberOfQuestions);
+            questionsLayout.setSpacing(true);
+            questionsLayout.setStyleName("questionsLayout");
 	        
 	        Label plusMinusLabel = new Label("Which type of calculations you want?");
             HorizontalLayout plusLayout = new HorizontalLayout();
@@ -108,7 +118,7 @@ public class MyUI extends UI {
             plusLayout.addComponents(plus, plusRangeLabel, plusRangeLayout);
             plusLayout.addStyleName("plusLayout");
             plus.addStyleName("plusIcon");
-
+            
             HorizontalLayout minusLayout = new HorizontalLayout();
 	        final CheckBox minus = new CheckBox();
 	        minus.setIcon(FontAwesome.MINUS);
@@ -183,10 +193,13 @@ public class MyUI extends UI {
 	            
 	        });
 	        formButtonBox.addComponent(submitButton);
-	        form.addComponents(numberOfQuestions, numberOfQuestions, plusMinusLabel, plusLayout, minusLayout, formButtonBox);
+	        formButtonBox.addStyleName("formButtonBox");
+	        form.addComponents(questionsLayout, plusMinusLabel, plusLayout, minusLayout, formButtonBox);
+	        
 	        form.setSpacing(true);
 	        form.setWidth("600px");
 	        formButtonBox.setWidth("100%");
+	        formButtonBox.setComponentAlignment(submitButton, Alignment.MIDDLE_CENTER);
 	        
 	        mainLayout.addComponent(form);    
             mainLayout.addComponent(panel);
@@ -213,6 +226,7 @@ public class MyUI extends UI {
         for (int i = 0; i < questions; i++) {
             VerticalLayout oneChallengeLayout = new VerticalLayout();
             oneChallengeLayout.addComponent(challengeLines.get(i));
+            oneChallengeLayout.addStyleName("oneChallengeLayout");
             HorizontalLayout buttonsLayout = new HorizontalLayout();
             Button previousButton = new Button("Previous");
             Button nextButton = new Button("Next");
@@ -255,6 +269,10 @@ public class MyUI extends UI {
                 }
             });
 
+            previousButton.addStyleName("previousButton");
+            nextButton.addStyleName("nextButton");
+            check.addStyleName("check");
+
             buttonsLayout.setComponentAlignment(check, Alignment.BOTTOM_CENTER);
             buttonsLayout.setSpacing(true);
 
@@ -285,14 +303,20 @@ public class MyUI extends UI {
                     rightAnswer = Integer.parseInt(challengeParts[0]) - Integer.parseInt(challengeParts[2]);
                     break;     
             }
+            FontAwesome correctIcon = FontAwesome.CHECK;
+            FontAwesome wrongIcon = FontAwesome.BAN;
+      
+            
             challengeLinesLabels.get(page).setVisible(true);
             if (answer == rightAnswer) {
                 
-                challengeLinesLabels.get(page).setIcon(FontAwesome.CHECK);
+                challengeLinesLabels.get(page).setIcon(correctIcon);
+                challengeLinesLabels.get(page).setStyleName("correctIconLabel");
                 points += 1;
                 challengeLinesLabels.get(page).setCaption("");
             } else {
-                challengeLinesLabels.get(page).setIcon(FontAwesome.AMBULANCE);
+                challengeLinesLabels.get(page).setStyleName("wrongIconLabel");
+                challengeLinesLabels.get(page).setIcon(wrongIcon);
                 challengeLinesLabels.get(page).setCaption("RightAnswer: " + rightAnswer);
             }
             questionsAnswered ++;
@@ -314,8 +338,10 @@ public class MyUI extends UI {
             
             answerBox.setWidth("100px");
             challengeLabel.setCaption(challenge);
+            
             challengeLine.addComponents(challengeLabel, answerBox, answerCorrect);
             challengeLine.setSpacing(true);
+        
             
             answers.addItemProperty("answer" + i, answerBox);
             challengeLinesLabels.add(answerCorrect);
@@ -351,6 +377,8 @@ public class MyUI extends UI {
         resultLayoutButtons.setWidth("100%");
         resultLayoutButtons.setComponentAlignment(checkButton, Alignment.MIDDLE_RIGHT);
         resultLayoutButtons.setComponentAlignment(newGameButton, Alignment.MIDDLE_LEFT);
+        checkButton.addStyleName("check");
+        newGameButton.addStyleName("previousButton");
 
         challengeLayout.setMargin(true);
         

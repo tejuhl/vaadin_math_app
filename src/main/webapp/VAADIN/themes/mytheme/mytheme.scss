@@ -35,13 +35,16 @@
   @include valo;
 	
 	.form {
-    background-color: #E1E1E1;
+    background-color: #F0F0F0;
 	border: 2px solid #000;
 	border-radius: 20px;
 	
-	align-items: center;
-	justify-content: center;
   }
+ .questionsLayout {
+	display: flex;
+	align-items: center;
+}
+
 	.plusLayout {
 		display: flex;
 		align-items: center;
@@ -58,13 +61,16 @@
 	}
 	.submitButton {
 		background: blue;
-		transition: 0.5s;
 		width: 100px;
-		border: 2px solid #000;
-		border-radius: 20px;
-		color: white;
+		border-color: blue;		
 	}
-	.submitButton:hover {
+	.v-button {
+		color: white;
+		border-radius: 10px;
+		border: 2px solid;
+		transition: 0.5s;
+	}
+	.v-button:hover {
 		transform: scale(1.2) perspective(1px);
 		
 	}
@@ -72,9 +78,42 @@
 	.v-panel-caption {
 		background: #9A00B2;
 		color: white;
-		
+		text-align: center;
+		border: 3px solid #9A00B2;
 	}
-
+	.v-panel-content {
+		background: #F0F0F0;
+		border: 1px solid #000;
+	}
 	
+	
+ .v-caption-wrongIconLabel .v-icon {
+   color: red;
+	font-size: 30px;
+ }
+ .v-caption-correctIconLabel .v-icon {
+  color: green;
+	font-size: 30px;
+}
+.oneChallengeLayout {
+  display: flex;
+  align-items: center;
+justify-content: center;
+flex-direction: column;
+}
+
+
+ .previousButton {
+	border-color: red;
+    background: red;
+}
+.check {
+	border-color: green;
+  background: green;
+}
+.nextButton {
+	border-color: lightseagreen;
+  background: lightseagreen;
+}
 
 }

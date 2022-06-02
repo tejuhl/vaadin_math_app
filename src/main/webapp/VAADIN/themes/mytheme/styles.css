@@ -13238,11 +13238,14 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .form {
-	background-color: #E1E1E1;
+	background-color: #F0F0F0;
 	border: 2px solid #000;
 	border-radius: 20px;
+}
+
+.mytheme .questionsLayout {
+	display: flex;
 	align-items: center;
-	justify-content: center;
 }
 
 .mytheme .plusLayout {
@@ -13265,18 +13268,61 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .submitButton {
 	background: blue;
-	transition: 0.5s;
 	width: 100px;
-	border: 2px solid #000;
-	border-radius: 20px;
-	color: white;
+	border-color: blue;
 }
 
-.mytheme .submitButton:hover {
-	width: 150px;
+.mytheme .v-button {
+	color: white;
+	border-radius: 10px;
+	border: 2px solid;
+	transition: 0.5s;
+}
+
+.mytheme .v-button:hover {
+	transform: scale(1.2) perspective(1px);
 }
 
 .mytheme .v-panel-caption {
 	background: #9A00B2;
 	color: white;
+	text-align: center;
+	border: 3px solid #9A00B2;
+}
+
+.mytheme .v-panel-content {
+	background: #F0F0F0;
+	border: 1px solid #000;
+}
+
+.mytheme .v-caption-wrongIconLabel .v-icon {
+	color: red;
+	font-size: 30px;
+}
+
+.mytheme .v-caption-correctIconLabel .v-icon {
+	color: green;
+	font-size: 30px;
+}
+
+.mytheme .oneChallengeLayout {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.mytheme .previousButton {
+	border-color: red;
+	background: red;
+}
+
+.mytheme .check {
+	border-color: green;
+	background: green;
+}
+
+.mytheme .nextButton {
+	border-color: lightseagreen;
+	background: lightseagreen;
 }
