@@ -29,6 +29,7 @@ public class OwnChallenge extends FormLayout {
         addButton.addClickListener(event -> {
             String ch = newChallengeText.getValue();
             addNewChallenge(ch);
+            newChallengeText.setValue("");
         });
 
         addChallengeLayout.addComponents(newChallengeText, addButton);
@@ -58,6 +59,7 @@ public class OwnChallenge extends FormLayout {
         Label challengeLabel = new Label(challenge);
         Button deleteButton = new Button();
         deleteButton.setIcon(FontAwesome.TRASH);
+        deleteButton.setStyleName("previousButton");
 
         challengeLine.setSpacing(true);
         challengeLine.addComponents(challengeLabel, deleteButton);
@@ -65,6 +67,11 @@ public class OwnChallenge extends FormLayout {
             ownChallengeList.remove(index);
             updateChallengeList();
         });
+        challengeLine.setSpacing(true);
+        challengeLine.setComponentAlignment(deleteButton, Alignment.MIDDLE_LEFT);
+        challengeLine.setComponentAlignment(challengeLabel, Alignment.MIDDLE_LEFT);
+        challengeLine.setHeight("50px");
+        challengeLine.setWidth("100px");
 
 
         return challengeLine;
