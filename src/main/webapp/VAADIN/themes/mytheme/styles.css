@@ -13239,8 +13239,6 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .form {
 	background-color: #F0F0F0;
-	border: 2px solid #000;
-	border-radius: 20px;
 }
 
 .mytheme .questionsLayout {
@@ -13281,6 +13279,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .v-button:hover {
 	transform: scale(1.2) perspective(1px);
+	cursor: pointer;
 }
 
 .mytheme .v-panel-caption {
@@ -13293,6 +13292,12 @@ div.v-layout.v-horizontal.v-widget {
 .mytheme .v-panel-content {
 	background: #F0F0F0;
 	border: 1px solid #000;
+}
+
+.mytheme .answerCorrectLayout {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .mytheme .v-caption-wrongIconLabel .v-icon {
@@ -13356,6 +13361,25 @@ div.v-layout.v-horizontal.v-widget {
 	background: red;
 }
 
+.mytheme .square {
+	width: 10px;
+	height: 10px;
+	margin: 1px;
+	background: blue;
+}
+
+.mytheme .v-slot-ball {
+	margin: 0;
+	padding: 0;
+	height: 12px;
+	width: 12px;
+}
+
+.mytheme div.v-slot.v-slot-ballLayout {
+	height: 12px;
+	width: 60px;
+}
+
 .mytheme .numLayout {
 	display: flex;
 	justify-content: center;
@@ -13365,4 +13389,44 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .numLayout .v-captiontext {
 	font-size: 50px;
+}
+
+.mytheme .questionOperatorLabel {
+	display: flex;
+	align-items: center;
+}
+
+.mytheme .v-caption-questionOperatorLabel .v-icon {
+	font-size: 40px;
+	color: #9A00B2;
+}
+
+.mytheme .ballLayout {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.mytheme .answerCorrectLayout {
+	display: flex;
+	align-items: center;
+}
+
+.mytheme .answerCorrect .v-captiontext {
+	font-size: 20px;
+}
+
+.mytheme .equalsSign {
+	font-size: 30px;
+}
+
+.mytheme .visualizeWarning {
+	font-size: 10px;
+	color: red;
+}
+
+.mytheme .challengeListLayout {
+	width: 80%;
+	height: 50px;
+	border: 1px solid #000;
 }
