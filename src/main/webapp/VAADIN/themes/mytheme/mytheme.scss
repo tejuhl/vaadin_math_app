@@ -36,10 +36,7 @@
 	
 	.form {
     background-color: #F0F0F0;
-	border: 2px solid #000;
-	border-radius: 20px;
-	
-  }
+	}
  .questionsLayout {
 	display: flex;
 	align-items: center;
@@ -72,7 +69,7 @@
 	}
 	.v-button:hover {
 		transform: scale(1.2) perspective(1px);
-		
+		cursor: pointer;
 	}
 	
 	.v-panel-caption {
@@ -84,6 +81,12 @@
 	.v-panel-content {
 		background: #F0F0F0;
 		border: 1px solid #000;
+	}
+
+	.answerCorrectLayout {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 	
 	
@@ -142,6 +145,23 @@ justify-content: center;
   margin: 1px;
   background: red;
 }
+.square {
+  width: 10px;
+  height: 10px;
+  margin: 1px;
+  background: blue;
+}
+.v-slot-ball {
+	margin: 0;
+	padding: 0;
+	height: 12px;
+	width: 12px;
+	
+}
+div.v-slot.v-slot-ballLayout {
+	height: 12px;
+	width: 60px;
+}
 .numLayout {
   display: flex;
   justify-content: center;
@@ -151,6 +171,41 @@ justify-content: center;
 }
 .numLayout .v-captiontext {
 	font-size: 50px;
+}
+.questionOperatorLabel {
+	display: flex;
+	align-items: center;
+}
+.v-caption-questionOperatorLabel .v-icon {
+	font-size: 40px;
+	color: #9A00B2;
+}
+.ballLayout {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.answerCorrectLayout {
+	display: flex;
+	align-items: center;
+}
+.answerCorrect .v-captiontext {
+	font-size: 20px;
+}
+.equalsSign {
+	font-size: 30px;
+}
+
+.visualizeWarning {
+	font-size: 10px;
+	color: red;
+}
+
+.challengeListLayout {
+	width: 80%;
+	height: 50px;
+	border: 1px solid #000;
 }
 
 }
