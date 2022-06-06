@@ -215,11 +215,11 @@ public class MyUI extends UI {
 
             formVerticalLayout.addComponents(formContentSelect, form, ownChallenges);
             formVerticalLayout.setSpacing(true);
-<<<<<<< HEAD
+
             ownChallenges.setVisible(false);
-=======
-            form.setVisible(false);
->>>>>>> e93f3a05429f3cb6d72cceab1946da1e611fa077
+
+            ownChallenges.setVisible(false);
+
 
             
             formContentSelect.addItems("Randomized Challenge", "Own Challenges");
